@@ -2,15 +2,8 @@
 
 username="test"
 password="test"
-wlanuserip=""
-UserAgent=""
-
-curlStr=$(curl -s http://202.206.16.116/eportal/index.jsp)
-if [ "$wlanuserip" = "" ]; then
-  echo "已获取wlanuserip,请重启脚本"
-  tmpip=$(echo $curlStr | grep -Eo "wlanuserip\=[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+" | grep -Eo "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+" | head -1) $wlanuserip;
-  sed -i '' '5s/".*"/'\"$tmpip\"'/' $0;
-fi
+wlanuserip=$(ifconfig | grep inet | grep -v inet6 | grep -v 127 | cut -d ' ' -f2);
+UserAgent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.0 Safari/605.1.15"
 
 function changePassword() {
     read -p "请输入账号" user
@@ -28,7 +21,6 @@ function login() {
       url="http://27.129.43.18/portal3/portal.jsp"
       data="domain=&logintype=1&username="$1"&password="$2"&wlanuserip="$3"&page=index&func=Login&0MKKey=%B5%C7%C2%BC"
       res=$(curl -H "User-Agent:$4" -s ${url} -d ${data} -k)
-
   fi
 }
 
